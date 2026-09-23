@@ -2,6 +2,10 @@ import CommonForm from "@/components/common/form";
 import { loginFormControls } from "@/config";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "@/store/auth-slice";
+import { toast } from "@/components/ui/use-toast";
+
 
 const initialState = {
 
@@ -10,7 +14,22 @@ const initialState = {
 };
 function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
-  function onSubmiit() {}
+  const dispatch = useDispatch()
+  function onSubmiit(event) {
+    event.preventDefault();
+    dispatch(loginUser(formData)).then(data=>{
+      if(data?.payload?.success){
+        toast.add({
+          title: data?.payload?.message,
+        })
+      }else{
+           toast.add({
+             title: data?.payload?.message,
+             variant: "destructive",
+           });
+      }
+    })
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6 ">

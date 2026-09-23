@@ -5,7 +5,7 @@ import { Link, } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "@/store/auth-slice";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "@/components/ui/use-toast";
 const initialState = {
   userName: "",
   email: "",
@@ -16,10 +16,27 @@ function AuthRegister() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  // const {toast} = useToast()
+
+
 function onSubmiit(event) {
  event.preventDefault()
  dispatch(registerUser(formData)).then((data)=>{
-   if(data?.payload?.success)navigate("/auth/login")
+     if (data?.payload?.success) {
+    toast.add({
+      title: "Registration Successful",
+      description: "Your account has been created successfully.",
+      type: "success",
+    });
+       navigate("/auth/login");
+     } else {
+       toast.add({
+        //  title: "Registration UnSuccessful",
+         variant: "destructive",
+         description: data?.payload?.message,
+         type: "success",
+       });
+     }
  })
   }
   console.log(formData);
