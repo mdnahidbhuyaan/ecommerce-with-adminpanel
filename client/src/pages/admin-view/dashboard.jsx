@@ -2,9 +2,9 @@
 
 function AdminDashboard() {
     return (
-      <div>
-        <div className="mt-4 bg-fuchsia-200 ">
-          <h1>AdminDashboard</h1>
+      <div className="h-screen w-full bg-blue-100 mt-4">
+        <div className="  ">
+          <h1 className="p-4">AdminDashboard</h1>
         </div>
       </div>
     );

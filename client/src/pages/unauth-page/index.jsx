@@ -3,7 +3,7 @@
 
 function UnauthPages() {
     return ( 
-        <div>You dont have access this page</div>
+        <div>You don't have access this page</div>
      );
 }
 
