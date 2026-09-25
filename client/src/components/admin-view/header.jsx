@@ -4,12 +4,12 @@ import { Button } from "../ui/button";
 function AdminHeader() {
     return (
       <header className="flex items-center justify-between px-4 py-3 bg-background border-b">
-        <Button className="lg:hidden sm:block">
+        <Button className="lg:hidden sm:block rounded-sm">
           <MenuIcon />
           <span className="sr-only">Toggle Menu</span>
         </Button>
         <div className="flex flex-1 justify-end">
-          <Button>
+          <Button className="inline-flex gap-2 items-center rounded-sm px-4 py-2 text-sm font-medium shadow border-none">
             <LogOut />
             Logout
           </Button>
