@@ -7,8 +7,11 @@ import axios from "axios";
 function ProductImageUpload({
   imageFile,
   setImageFile,
+  // eslint-disable-next-line no-unused-vars
   uploadedImageUrl,
+  // eslint-disable-next-line no-unused-vars
   setUploadedImageUrl,
+  setImageLoadingState,
 }) {
   const inputRef = useRef(null);
   function handleImageFileChange(event) {
@@ -39,14 +42,16 @@ function ProductImageUpload({
   console.log(imageFile);
 
   async function uploadImageToCloudinary(){
-    
+    setImageLoadingState(true)
     const data = new FormData()
     data.append("my_file", imageFile);
     const response = await axios.post(
       "http://localhost:5000/api/admin/products/upload-image",data);
       console.log(response, "response")
 
-      if(response)setUploadedImageUrl(response.data.url)
+      if(response.data?.success){
+        setImageLoadingState(false)
+      }
 
   }
 
