@@ -3,13 +3,14 @@ import { Input } from "@/components/ui/input";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import axios from "axios";
+import { Skeleton } from "../ui/skeleton";
+
 
 function ProductImageUpload({
   imageFile,
   setImageFile,
-  // eslint-disable-next-line no-unused-vars
+  imageLoadingState,
   uploadedImageUrl,
-  // eslint-disable-next-line no-unused-vars
   setUploadedImageUrl,
   setImageLoadingState,
 }) {
@@ -48,8 +49,8 @@ function ProductImageUpload({
     const response = await axios.post(
       "http://localhost:5000/api/admin/products/upload-image",data);
       console.log(response, "response")
-
       if(response.data?.success){
+        setUploadedImageUrl(response.data?.result.url)
         setImageLoadingState(false)
       }
 
@@ -87,6 +88,8 @@ if(imageFile !== null) uploadImageToCloudinary(imageFile)
             <span>Drag and drop or click to upload image</span>
           </Label>
         ) : (
+          imageLoadingState ? 
+          <Skeleton className=" h-10"/>:
           <div className="flex items-center justify-between">
            <div className="flex items-center">
             <FileIcon className="w-8 h-8 text-primary mr-2"/>

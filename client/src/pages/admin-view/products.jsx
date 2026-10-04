@@ -56,6 +56,7 @@ function AdminProduct() {
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
             setImageLoadingState={setImageLoadingState}
+            imageLoadingState={imageLoadingState}
           />
           <div className="p-6">
             <CommonForm
