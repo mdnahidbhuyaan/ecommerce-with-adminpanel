@@ -10,6 +10,7 @@ function ProductImageUpload({
   imageFile,
   setImageFile,
   imageLoadingState,
+  // eslint-disable-next-line no-unused-vars
   uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,

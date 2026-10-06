@@ -4,7 +4,7 @@ import axios from "axios";
 
 const initialState = {
     isLoading: false,
-    products: [],
+    productList: [],
 }
 
 export const addNewProduct = createAsyncThunk("products/addNewProduct", async(formData)=>{
@@ -64,9 +64,9 @@ const adminProductSlice = createSlice({
     builder.addCase(fetchAllProducts.pending,(state)=>{
         state.isLoading = true
     }).addCase(fetchAllProducts.fulfilled,(state,action)=>{
-        console.log(action.payload)
+        console.log(action.payload.data)
         state.isLoading = false
-        state.productList = action.payload
+        state.productList = action.payload.data
     // eslint-disable-next-line no-unused-vars
     }).addCase(fetchAllProducts.rejected,(state,action)=>{
         state.isLoading = false
