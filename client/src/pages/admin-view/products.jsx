@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { addNewProduct } from "@/store/admin/product-slice";
 import { toast } from "@/components/ui/use-toast";
 import AdminProductTile from "@/components/admin-view/product-tile";
+import { editProduct } from "@/store/admin/product-slice";
 
 // import { addProduct } from "@/store/product-slice";
 
@@ -35,11 +36,24 @@ function AdminProduct() {
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
   const { productList } = useSelector((state) => state.adminProducts);
   const dispatch = useDispatch();
 
   function onSubmit(event) {
     event.preventDefault();
+  currentEditedId !== null ? 
+  dispatch(editProduct({
+    id: currentEditedId, formData 
+  })).then((data)=>{
+    console.log(data, "edit data")
+    if(data?.payload?.success){
+      dispatch(fetchAllProducts());
+      setFormData(initialFormData);
+      setOpenCreateProductDialog(false);
+      setCurrentEditedId(null);
+    }
+  }) :
     dispatch(
       addNewProduct({
         ...formData,
@@ -60,13 +74,15 @@ function AdminProduct() {
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
-  console.log(productList, uploadedImageUrl, "productList");
+  console.log(formData, "productList");
 
   return (
     <Fragment>
       <div className="p-5 w-full flex justify-end ">
         <Button onClick={() => setOpenCreateProductDialog(true)}>
-          add New Product
+          {
+            currentEditedId !== null ? "Edit Product" : "Add New Product"
+          }
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -75,7 +91,7 @@ function AdminProduct() {
               console.log("MAP PRODUCT:", productItem);
 
               return (
-                <AdminProductTile key={productItem.id} product={productItem} />
+                <AdminProductTile setFormData={setFormData} setOpenCreateProductDialog={setOpenCreateProductDialog} setCurrentEditedId={setCurrentEditedId} key={productItem.id} product={productItem} />
               );
             })
           : null}
@@ -84,6 +100,8 @@ function AdminProduct() {
         open={openCreateProductDialog}
         onOpenChange={() => {
           setOpenCreateProductDialog(false);
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
         }}
       >
         <SheetContent side="right" className="overflow-auto">
@@ -97,13 +115,14 @@ function AdminProduct() {
             setUploadedImageUrl={setUploadedImageUrl}
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
+            isEditMode={currentEditedId !== null}
           />
           <div className="p-6">
             <CommonForm
               onSubmit={onSubmit}
               formData={formData}
               setFromData={setFormData}
-              buttonText="Add Product"
+              buttonText={currentEditedId !== null ? "Edit" : "Add"}
               formControls={addProductFormElements}
             />
           </div>
