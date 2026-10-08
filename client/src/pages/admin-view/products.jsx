@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import { addNewProduct } from "@/store/admin/product-slice";
 import { toast } from "@/components/ui/use-toast";
 import AdminProductTile from "@/components/admin-view/product-tile";
-import { editProduct } from "@/store/admin/product-slice";
+import { editProduct, deleteProduct } from "@/store/admin/product-slice";
 
 // import { addProduct } from "@/store/product-slice";
 
@@ -42,35 +42,54 @@ function AdminProduct() {
 
   function onSubmit(event) {
     event.preventDefault();
-  currentEditedId !== null ? 
-  dispatch(editProduct({
-    id: currentEditedId, formData 
-  })).then((data)=>{
-    console.log(data, "edit data")
-    if(data?.payload?.success){
-      dispatch(fetchAllProducts());
-      setFormData(initialFormData);
-      setOpenCreateProductDialog(false);
-      setCurrentEditedId(null);
-    }
-  }) :
-    dispatch(
-      addNewProduct({
-        ...formData,
-        image: uploadedImageUrl,
-      }),
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchAllProducts());
-        setOpenCreateProductDialog(false);
-        setImageFile(null);
-        setFormData(initialFormData);
-        toast.add({
-          title: "Product Added Successfully",
+    currentEditedId !== null
+      ? dispatch(
+          editProduct({
+            id: currentEditedId,
+            formData,
+          }),
+        ).then((data) => {
+          console.log(data, "edit data");
+          if (data?.payload?.success) {
+            dispatch(fetchAllProducts());
+            setFormData(initialFormData);
+            setOpenCreateProductDialog(false);
+            setCurrentEditedId(null);
+          }
+        })
+      : dispatch(
+          addNewProduct({
+            ...formData,
+            image: uploadedImageUrl,
+          }),
+        ).then((data) => {
+          if (data?.payload?.success) {
+            dispatch(fetchAllProducts());
+            setOpenCreateProductDialog(false);
+            setImageFile(null);
+            setFormData(initialFormData);
+            toast.add({
+              title: "Product Added Successfully",
+            });
+          }
         });
-      }
-    });
   }
+
+  function handleDelete (getCurrentProductId){
+   dispatch(deleteProduct(getCurrentProductId)).then((data) => {
+    if(data?.payload?.success){
+      dispatch(fetchAllProducts())
+    }
+   })
+  }
+
+  function isFormValid() {
+    return Object
+      .keys(formData)
+      .map((key) => formData[key] !== "")
+      .every((item) => item);
+  }
+
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
@@ -80,9 +99,7 @@ function AdminProduct() {
     <Fragment>
       <div className="p-5 w-full flex justify-end ">
         <Button onClick={() => setOpenCreateProductDialog(true)}>
-          {
-            currentEditedId !== null ? "Edit Product" : "Add New Product"
-          }
+          {currentEditedId !== null ? "Edit Product" : "Add New Product"}
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -91,7 +108,14 @@ function AdminProduct() {
               console.log("MAP PRODUCT:", productItem);
 
               return (
-                <AdminProductTile setFormData={setFormData} setOpenCreateProductDialog={setOpenCreateProductDialog} setCurrentEditedId={setCurrentEditedId} key={productItem.id} product={productItem} />
+                <AdminProductTile
+                  setFormData={setFormData}
+                  setOpenCreateProductDialog={setOpenCreateProductDialog}
+                  setCurrentEditedId={setCurrentEditedId}
+                  key={productItem.id}
+                  product={productItem}
+                  handleDelete={handleDelete}
+                />
               );
             })
           : null}
@@ -124,6 +148,7 @@ function AdminProduct() {
               setFromData={setFormData}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
               formControls={addProductFormElements}
+              isBtnDisabled={!isFormValid()}
             />
           </div>
         </SheetContent>

@@ -6,6 +6,7 @@ function AdminProductTile({
   setFormData,
   setOpenCreateProductDialog,
   setCurrentEditedId,
+  handleDelete
 }) {
   console.log("AdminProductTile:", product);
 
@@ -42,7 +43,7 @@ function AdminProductTile({
          setFormData(product);
         }}
         >Edit</Button>
-        <Button>Delete</Button>
+        <Button onClick={()=>handleDelete(product?._id)}>Delete</Button>
       </CardFooter>
     </Card>
   );
