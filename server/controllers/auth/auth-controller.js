@@ -57,6 +57,7 @@ const loginUser = async (req, res) => {
         id: checkUser._id,
         role: checkUser.role,
         email: checkUser.email,
+        userName: checkUser.userName,
       },
       "CLIENT_SECRET_KEY",
       { expiresIn: "60m" },
@@ -69,6 +70,7 @@ const loginUser = async (req, res) => {
         email: checkUser.email,
         role: checkUser.role,
         id: checkUser._id,
+        userName: checkUser.userName,
       },
     });
   } catch (error) {
@@ -81,34 +83,36 @@ const loginUser = async (req, res) => {
 };
 //logout
 
-const logoutUser = async (req,res)=>{
+const logoutUser = async (req, res) => {
   res.clearCookie("token").json({
     success: true,
     message: "Logout Successfully",
-    
-  })
-}
+  });
+};
 //middleware
 
-const authMiddleWare = async (req, res, next) =>{
-const token = req.cookies.token;
-if(!token) return res.status(401).json({
-  success:false,
-  message:"Unauthorized user !"
-})
-try{
-  const decoded = jwt.verify(token, "CLIENT_SECRET_KEY",)
-  req.user = decoded;
-  next();
-}catch(error){
-  res.status(401).json({
-    success:false,
-    message:"Unauthorized user !"
-  })
-}
-}
-
+const authMiddleWare = async (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token)
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized user !",
+    });
+  try {
+    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized user !",
+    });
+  }
+};
 
 module.exports = {
-  registerUser,loginUser,logoutUser,authMiddleWare
+  registerUser,
+  loginUser,
+  logoutUser,
+  authMiddleWare,
 };
