@@ -12,11 +12,22 @@ import { sortOptions } from "@/config";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "@/store/shop/product-slice";
+import ShoppingProductTile from "./product.tile";
+import { useState } from "react";
 
 function ShoppingListing() {
 
 const dispatch = useDispatch()
 const {productList} = useSelector(state=>state.shopProducts)
+const [filter,setFilter] = useState(null)
+const [sort,setSort] = useState(null)
+
+function handleSort(value){
+  setSort(value)
+}
+function handleFilter(getSectionId,getCurrentOption){
+  console.log(getSectionId,getCurrentOption,"getSectionId,getCurrentOption");
+}
 
 
 useEffect(()=>{
@@ -32,7 +43,7 @@ console.log(productList, "productList");
         <div className="p-4 border-b flex items-center justify-between ">
           <h2 className="text-lg font-extrabold">All Products</h2>
           <div className="flex items-center gap-4 ">
-            <span className="text-muted-foreground ">10 Products</span>
+            <span className="text-muted-foreground ">{productList?.length} Products</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -45,9 +56,9 @@ console.log(productList, "productList");
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuRadioGroup>
+                <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
                   {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem key={sortItem.id}>
+                    <DropdownMenuRadioItem value={sortItem.id} key={sortItem.id}>
                       {sortItem.label}
                     </DropdownMenuRadioItem>
                   ))}
@@ -56,10 +67,11 @@ console.log(productList, "productList");
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-          <div>
-            
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          {
+            productList && productList.length > 0 ? 
+            productList.map(productItem => <ShoppingProductTile product={productItem} />) : null
+          }
         </div>
       </div>
     </div>

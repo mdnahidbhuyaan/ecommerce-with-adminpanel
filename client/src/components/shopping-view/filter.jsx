@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
-function ProductFilter() {
+function ProductFilter({filters,}) {
   return (
     <div className=" rounded-lg shadow-md bg-green-50">
       <div className="p-4 border-b">
