@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
-function ProductFilter({filters,}) {
+function ProductFilter({ filters, handleFilter }) {
   return (
     <div className=" rounded-lg shadow-md bg-green-50">
       <div className="p-4 border-b">
@@ -15,15 +15,24 @@ function ProductFilter({filters,}) {
             <div>
               <h3 className="text-base font-bold ">{keyItem}</h3>
               <div className="grid gap-2 mt-2 ">
-                {
-                    filterOptions[keyItem].map(option => <Label className="flex font-medium items-center gap-2 ">
-                    <Checkbox className="bg-white shadow-md"/>
+                {filterOptions[keyItem].map((option) => (
+                  <Label className="flex font-medium items-center gap-2 ">
+                    <Checkbox
+                      checked={
+                        filters &&
+                        Object.keys(filters).length > 0 &&
+                        filters[keyItem] &&
+                        filters[keyItem].indexOf(option.id) > -1
+                      }
+                      onCheckedChange={() => handleFilter(keyItem, option.id)}
+                      className="bg-white shadow-md"
+                    />
                     {option.label}
-                    </Label>
-                    )}
-                </div>
+                  </Label>
+                ))}
+              </div>
             </div>
-            <Separator/>
+            <Separator />
           </Fragment>
         ))}
       </div>

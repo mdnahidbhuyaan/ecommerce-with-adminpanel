@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-assignment */
+/* eslint-disable react-hooks/set-state-in-effect */
 import ProductFilter from "@/components/shopping-view/filter";
 import {
   DropdownMenu,
@@ -9,41 +11,63 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDownIcon } from "lucide-react";
 import { sortOptions } from "@/config";
-import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "@/store/shop/product-slice";
-import ShoppingProductTile from "./product.tile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ShoppingProductTile from "../../components/shopping-view/product.tile";
 
 function ShoppingListing() {
+  const dispatch = useDispatch();
+  const { productList } = useSelector((state) => state.shopProducts);
+  const [filters, setFilters] = useState({});
+  const [sort, setSort] = useState(null);
 
-const dispatch = useDispatch()
-const {productList} = useSelector(state=>state.shopProducts)
-const [filter,setFilter] = useState(null)
-const [sort,setSort] = useState(null)
+  function handleSort(value) {
+    setSort(value);
+  }
 
-function handleSort(value){
-  setSort(value)
-}
-function handleFilter(getSectionId,getCurrentOption){
-  console.log(getSectionId,getCurrentOption,"getSectionId,getCurrentOption");
-}
-
+  function handleFilter(getSectionId, getCurrentOptions) {
+    let cpyFilters = { ...filters };
+    const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+    if (indexOfCurrentSection === -1) {
+      cpyFilters = {
+        ...cpyFilters,
+        [getSectionId]: [getCurrentOptions],
+      };
+    } else {
+      const indexOfCurrentOption =
+        cpyFilters[getSectionId].indexOf(getCurrentOptions);
+      if (indexOfCurrentOption === -1)
+        cpyFilters[getSectionId].push(getCurrentOptions);
+      else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+    }
+    setFilters(cpyFilters);
+    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+  }
 
 useEffect(()=>{
-  dispatch(fetchAllFilteredProducts());
-},[dispatch])
+setSort("price-lowtohigh")
+setFilters(JSON.parse(sessionStorage.getItem("filters")) || {})
+},[])
 
-console.log(productList, "productList");
+
+  useEffect(() => {
+    dispatch(fetchAllFilteredProducts());
+  }, [dispatch]);
+
+  console.log(filters, "filters");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
-      <ProductFilter />
+      <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-md">
         <div className="p-4 border-b flex items-center justify-between ">
           <h2 className="text-lg font-extrabold">All Products</h2>
           <div className="flex items-center gap-4 ">
-            <span className="text-muted-foreground ">{productList?.length} Products</span>
+            <span className="text-muted-foreground ">
+              {productList?.length} Products
+            </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -56,9 +80,12 @@ console.log(productList, "productList");
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuRadioGroup value={sort} onValueChange={setSort}>
+                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem value={sortItem.id} key={sortItem.id}>
+                    <DropdownMenuRadioItem
+                      value={sortItem.id}
+                      key={sortItem.id}
+                    >
                       {sortItem.label}
                     </DropdownMenuRadioItem>
                   ))}
@@ -68,10 +95,11 @@ console.log(productList, "productList");
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {
-            productList && productList.length > 0 ? 
-            productList.map(productItem => <ShoppingProductTile product={productItem} />) : null
-          }
+          {productList && productList.length > 0
+            ? productList.map((productItem) => (
+                <ShoppingProductTile product={productItem} />
+              ))
+            : null}
         </div>
       </div>
     </div>
