@@ -25,6 +25,7 @@ function ShoppingListing() {
 
   function handleSort(value) {
     setSort(value);
+   
   }
 
   function handleFilter(getSectionId, getCurrentOptions) {
