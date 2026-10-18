@@ -19,6 +19,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       `http://localhost:5000/api/shop/products/get?${query}`,
     );
 
+    console.log(result, "result");
     return result?.data;
   },
 );
