@@ -4,13 +4,14 @@ const getFilteredProduct = async (req, res) => {
   try {
     const {category = [], brand = [], sortBy = ["price-lowtohigh"]} = req.query
     let filters = {}
-    if(filters.length){
+    if(category.length){
       filters.category = {$in: category.split(",")}
     }
         if (brand.length) {
-          filters.category = { $in: brand.split(",") };
+          filters.brand = { $in: brand.split(",") };
         }
 let sort = {}
+
    switch (sortBy) {
      case "price - lowtohigh":
        sort.price = 1;
@@ -30,7 +31,12 @@ let sort = {}
    }
 
 
-    const products = await Product.find(filters).sort(sort);
+   console.log("Received query:", req.query);
+   console.log("MongoDB filters:", filters);
+
+   const products = await Product.find(filters).sort(sort);
+
+   console.log("Products found:", products.length);
     res.status(200).json({
       success: true,
       data: products,

@@ -18,68 +18,76 @@ import { useState, useEffect } from "react";
 import ShoppingProductTile from "../../components/shopping-view/product.tile";
 import { useSearchParams } from "react-router-dom";
 
+function createSearchParamsHelper(filterParams) {
+  const queryParams = [];
 
-function createSearchParamsHelper(filterParams){
-const queryParams = []
-for(const [key,value] of Object.entries(filterParams)){
-  if(Array.isArray(value) && value.length > 0) {
-    const paramValue = value.join(',');
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
-
+    }
   }
+
+  console.log(queryParams, "queryParams");
+
+  return queryParams.join("&");
 }
-console.log(queryParams,"queryParams")
-return queryParams.join("&")
-}
+
+
+
+
 function ShoppingListing() {
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
-  const [searchParams,setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function handleSort(value) {
     setSort(value);
-   
   }
 
-  function handleFilter(getSectionId, getCurrentOptions) {
+  function handleFilter(getSectionId, getCurrentOption) {
     let cpyFilters = { ...filters };
     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
     if (indexOfCurrentSection === -1) {
       cpyFilters = {
         ...cpyFilters,
-        [getSectionId]: [getCurrentOptions],
+        [getSectionId]: [getCurrentOption],
       };
     } else {
       const indexOfCurrentOption =
-        cpyFilters[getSectionId].indexOf(getCurrentOptions);
+        cpyFilters[getSectionId].indexOf(getCurrentOption);
       if (indexOfCurrentOption === -1)
-        cpyFilters[getSectionId].push(getCurrentOptions);
+        cpyFilters[getSectionId].push(getCurrentOption);
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
     setFilters(cpyFilters);
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
-useEffect(()=>{
-setSort("price-lowtohigh")
-setFilters(JSON.parse(sessionStorage.getItem("filters")) || {})
-},[])
-
-useEffect(()=>{
- if(filters && Object.keys(filters).length > 0) {
-const createQueryString = createSearchParamsHelper(filters)
-setSearchParams(new URLSearchParams(createQueryString))
- }
-},[filters])
+  useEffect(() => {
+    setSort("price-lowtohigh");
+    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
+  }, []);
 
   useEffect(() => {
-    if(filters !== null && sort !== null)
-    dispatch(fetchAllFilteredProducts({filterParams : filters, sortParams : sort}));
-  }, [dispatch,sort,filters]);
+    if (filters && Object.keys(filters).length > 0) {
+      const createQueryString = createSearchParamsHelper(filters);
+      setSearchParams(new URLSearchParams(createQueryString));
+    }
+  }, [filters, setSearchParams]);
+  console.log(filters, " filters",);
 
-  console.log(filters,searchParams.toString(), "filters");
+  useEffect(() => {
+    if (filters !== null && sort !== null)
+      dispatch(
+        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }),
+      );
+  }, [dispatch, sort, filters]);
+
+  console.log(filters, searchParams.toString(), "filters");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
