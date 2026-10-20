@@ -31,8 +31,6 @@ let sort = {}
    }
 
 
-   console.log("Received query:", req.query);
-   console.log("MongoDB filters:", filters);
 
    const products = await Product.find(filters).sort(sort);
 
