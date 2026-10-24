@@ -160,7 +160,7 @@ const deleteCartItems = async (req, res) => {
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,
-        message: "Invalid data provided!",
+        message: "Invalid data providedd!",
       });
     }
     const cart = await Cart.findOne({ userId }).populate({
