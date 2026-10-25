@@ -154,7 +154,7 @@ const updateCartItemQty = async (req, res) => {
     });
   }
 };
-const deleteCartItems = async (req, res) => {
+const deleteCartItem = async (req, res) => {
   try {
     const { userId, productId } = req.params;
     if (!userId || !productId) {
@@ -209,5 +209,5 @@ module.exports = {
   addToCart,
   fetchCartItems,
   updateCartItemQty,
-  deleteCartItems,
+  deleteCartItem,
 };

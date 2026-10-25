@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -9,17 +9,20 @@ const initialState = {
 };
 
 export const fetchAllFilteredProducts = createAsyncThunk(
-  "products/fetchAllProducts",
+  "/products/fetchAllProducts",
   async ({ filterParams, sortParams }) => {
     console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
+
     const query = new URLSearchParams({
       ...filterParams,
       sortBy: sortParams,
     });
-    console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
+
     const result = await axios.get(
       `http://localhost:5000/api/shop/products/get?${query}`,
     );
+
+    console.log(result);
 
     return result?.data;
   },
@@ -37,9 +40,13 @@ export const fetchProductDetails = createAsyncThunk(
 );
 
 const shoppingProductSlice = createSlice({
-  name: "shoppingProduct",
+  name: "shoppingProducts",
   initialState,
-  reducers: {},
+  reducers: {
+    setProductDetails: (state) => {
+      state.productDetails = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllFilteredProducts.pending, (state, action) => {
@@ -66,5 +73,7 @@ const shoppingProductSlice = createSlice({
       });
   },
 });
+
+export const { setProductDetails } = shoppingProductSlice.actions;
 
 export default shoppingProductSlice.reducer;
