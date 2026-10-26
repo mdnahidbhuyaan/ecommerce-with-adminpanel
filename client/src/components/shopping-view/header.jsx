@@ -3,7 +3,7 @@ import { House, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { useSelector,useDispatch  } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import {
   DropdownMenu,
@@ -18,13 +18,8 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
-import { useState } from "react";
-
-
-
-
-
-
+import { useEffect, useState } from "react";
+import { fetchCartItems } from "@/store/shop/cart-slice";
 
 function MenuItems() {
   return (
@@ -44,13 +39,20 @@ function MenuItems() {
 
 function HeaderRightContent() {
   const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-function handleLogout() {
-  dispatch(logoutUser());
-}
+  function handleLogout() {
+    dispatch(logoutUser());
+  }
+
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch]);
+
+  console.log(cartItems, "Nahid");
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4 ">
@@ -64,7 +66,13 @@ function handleLogout() {
           <span className="sr-only">User Cart</span>
         </Button>
 
-        <UserCartWrapper />
+        <UserCartWrapper
+          cartItems={
+            cartItems && cartItems.items && cartItems.items.length > 0
+              ? cartItems.items
+              : []
+          }
+        />
       </Sheet>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
