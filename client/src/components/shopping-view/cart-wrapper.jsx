@@ -11,7 +11,7 @@ function UserCartWrapper({cartItems}) {
       <div className="mt-2 space-y-4 ">
         {
           cartItems && cartItems.length > 0 ?
-          cartItems.map(item => <UserCartItemsContent cartItems={item}/>) : null
+          cartItems.map(item => <UserCartItemsContent cartItem={item}/>) : null
         }
       </div>
       <div className="p-5">

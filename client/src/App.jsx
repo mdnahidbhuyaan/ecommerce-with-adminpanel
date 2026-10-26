@@ -37,7 +37,7 @@ const App = () => {
   }
 console.log(isLoading,user)
   return (
-    <div className="flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col bg-white">
       <Routes>
         <Route
           path="/auth"

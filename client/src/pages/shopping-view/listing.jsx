@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-useless-assignment */
 /* eslint-disable react-hooks/set-state-in-effect */
 import ProductFilter from "@/components/shopping-view/filter";
@@ -22,6 +23,7 @@ import ShoppingProductTile from "../../components/shopping-view/product.tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { toast } from "@/components/ui/use-toast";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -47,9 +49,10 @@ function ShoppingListing() {
   const { user } = useSelector((state) => state.auth);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
-  // eslint-disable-next-line no-unused-vars
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  // const {toast} = useToastManager()
 
   function handleSort(value) {
     setSort(value);
@@ -90,6 +93,10 @@ function ShoppingListing() {
     ).then((data) => {
     if(data?.payload?.success){
       dispatch(fetchCartItems(user?.id))
+      toast.add({
+        title: "Product Added to Cart Successfully",
+        type: "success",
+      })
     }
     });
   }
