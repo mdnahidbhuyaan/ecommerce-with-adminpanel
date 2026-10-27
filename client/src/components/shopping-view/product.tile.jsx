@@ -9,18 +9,18 @@ function ShoppingProductTile({
   handleAddToCart,
 }) {
   return (
-    <Card className="w-full max-w-sm mx-auto ">
+    <Card className="w-full max-w-sm mx-auto p-0 gap-0 overflow-hidden">
       <div
         className="cursor-pointer"
         onClick={() => {
           handleGetProductDetails(product?._id);
         }}
       >
-        <div className="relative ">
+        <div className="relative p-0 m-0">
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg "
+            className="block w-full h-[400px] object-cover rounded-t-lg"
           />
 
           {product?.salePrice > 0 ? (
