@@ -118,11 +118,23 @@ function ShoppingHome() {
     <div className="flex flex-col min-h-screen">
       <div className="relative mx-3 sm:mx-5 lg:mx-8 overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/60">
         <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[500px] xl:h-[560px] overflow-hidden">
-          <img
-            src={slides[currentSlide]}
-            alt={`Banner ${currentSlide + 1}`}
-            className="absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-500"
-          />
+          
+          <div className="absolute inset-0 overflow-hidden">
+            {slides.map((slide, index) => (
+              <img
+                key={slide}
+                src={slide}
+                alt={`Banner ${index + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover object-[center_30%] transition-transform duration-500 ease-in-out ${
+                  index === currentSlide
+                    ? "translate-x-0"
+                    : index < currentSlide
+                      ? "-translate-x-full"
+                      : "translate-x-full"
+                }`}
+              />
+            ))}
+          </div>
 
           {/* Subtle overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/10 via-transparent to-slate-900/10 pointer-events-none" />
@@ -254,7 +266,7 @@ function ShoppingHome() {
           </div>
         </div>
       </section>
-    
+
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-indigo-50/40 py-16 md:py-20">
         <div className="container mx-auto px-4">
           {/* Section Heading */}
@@ -299,7 +311,7 @@ function ShoppingHome() {
           )}
         </div>
       </section>
-      
+
       <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}

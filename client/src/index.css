@@ -128,3 +128,18 @@
     @apply font-sans;
     }
 }
+
+
+@keyframes slide-carousel {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-carousel {
+  animation: slide-carousel 500ms ease-in-out;
+}
