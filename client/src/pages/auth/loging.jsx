@@ -64,7 +64,7 @@ function AuthLogin() {
     formControls={loginFormControls}
     buttonText={"Sign In"}
     formData={formData}
-    setFromData={setFormData}
+    setFormData={setFormData}
     onSubmit={onSubmiit}
   />
 

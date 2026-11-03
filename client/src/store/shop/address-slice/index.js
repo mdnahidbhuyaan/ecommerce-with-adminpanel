@@ -68,11 +68,11 @@ const addressSlice = createSlice({
       })
       .addCase(addNewAddress.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.addressList = action.payload.data;
+        // state.addressList = action.payload.data;
       })
       .addCase(addNewAddress.rejected, (state) => {
         state.isLoading = false;
-        state.addressList = [];
+        // state.addressList = [];
       })
       .addCase(fetchAllAddresses.pending, (state) => {
         state.isLoading = true;
