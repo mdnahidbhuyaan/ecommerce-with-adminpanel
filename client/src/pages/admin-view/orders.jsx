@@ -1,13 +1,11 @@
-
+import AdminOrdersView from "@/components/admin-view/orders";
 
 function AdminOrders() {
-    return (
-      <div className="h-screen w-full bg-blue-100">
-        <div className="  ">
-          <h1 className="p-4">AdminOrders</h1>
+    return ( 
+        <div>
+            <AdminOrdersView/>
         </div>
-      </div>
-    );
+     );
 }
 
 export default AdminOrders;

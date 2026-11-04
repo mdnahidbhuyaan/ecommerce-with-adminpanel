@@ -103,7 +103,7 @@ function Address() {
   console.log(addressList, "addressList");
   return (
     <Card className="">
-      <div className="mb-5 p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 shadow-sm ">
+      <div className="mb-5 p-5 grid grid-cols-1 sm:grid-cols-2  gap-2 shadow-sm ">
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
